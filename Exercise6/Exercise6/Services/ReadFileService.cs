@@ -15,6 +15,7 @@ namespace Exercise6.Services
             _fileService = fileService;
         }
 
+        //Will read the file and determine if it is a correct file type
         public void ReadFilePath(string path)
         {
             string ext = Path.GetExtension(path);

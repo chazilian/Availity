@@ -25,4 +25,3 @@ service.ReadFilePath(input);
 Console.WriteLine("Finished Processing file");
 
 Console.ReadLine();
-//C:\Users\Foobar\Downloads\sample_availity.csv

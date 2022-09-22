@@ -1,7 +1,5 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,8 +22,15 @@ tr:nth-child(even) {
   background-color: #cce2f8;
 }
 
+.add-form{
+  border: 2px solid #000;
+}
+
 .form-control {
-  margin: 20px 0;
+  padding: 10px;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
 }
 
 .form-control label {
@@ -33,7 +38,7 @@ tr:nth-child(even) {
 }
 
 .form-control input {
-  width: 100%;
+  width: 90%;
   height: 40px;
   margin: 5px;
   padding: 3px 7px;
@@ -49,12 +54,25 @@ tr:nth-child(even) {
   margin: 10px;
   border-radius: 5px;
   cursor: pointer;
-  text-decoration: none;
   font-size: 15px;
   font-family: inherit;
 }
 
+.center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .btn-block {
   display: block;
-  width: 100%;
+  width: 90%;
+}
+
+.red{
+  color: crimson;
+}
+
+.black{
+  color: black;
 }

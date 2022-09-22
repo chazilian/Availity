@@ -37,6 +37,12 @@ namespace Exercise6.Services
 
         private void CsvBuilder(Dictionary<string, List<EnrolleeModel>> dict)
         {
+            string path = $"{Environment.CurrentDirectory}\\out";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+                Console.WriteLine(path + " Created");
+            }
 
             foreach (var key in dict.Keys)
             {
@@ -50,7 +56,7 @@ namespace Exercise6.Services
                         $"{enrollee.Version}");
                     csv.AppendLine(newline);
                 }
-                var fileName = Path.Combine(Environment.CurrentDirectory, $"{key}_{Guid.NewGuid()}.csv");
+                var fileName = Path.Combine(path, $"{key}_{Guid.NewGuid()}.csv");
                 File.WriteAllTextAsync(fileName, csv.ToString());
                 Console.WriteLine($"File {fileName} was created.");
             }

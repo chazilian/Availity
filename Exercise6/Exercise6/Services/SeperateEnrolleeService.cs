@@ -9,6 +9,7 @@ namespace Exercise6.Services
 {
     public class SeperateEnrolleeService : ISeperateEnrolleeService
     {
+        //Seperates Enrollees into a dictionary
         public Dictionary<string, List<EnrolleeModel>> SeperateEnrollee(List<EnrolleeModel> input)
         {
             Dictionary<string, List<EnrolleeModel>> dictEnrollee = new Dictionary<string, List<EnrolleeModel>>();
@@ -29,6 +30,7 @@ namespace Exercise6.Services
             return RemoveDuplicates(dictEnrollee);
         }
 
+        //Removes duplicate Enrollees and picks the one with the latest version.
         private Dictionary<string, List<EnrolleeModel>> RemoveDuplicates(Dictionary<string, List<EnrolleeModel>> dict)
         {
             Dictionary<string, List<EnrolleeModel>> dictTemp = new Dictionary<string, List<EnrolleeModel>>();
@@ -55,6 +57,7 @@ namespace Exercise6.Services
             return dictTemp;
         }
 
+        //Orders Enrollees by lastname and first name
         private IOrderedEnumerable<EnrolleeModel> OrderByLastNameThenFirstName(IEnumerable<EnrolleeModel> a, IEnumerable<EnrolleeModel?> b)
         {
             if (b.Count() == 0)

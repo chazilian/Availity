@@ -27,6 +27,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <h1>Availity Healthcare Provider Registration Form</h1>
       <RegistrationForm addEntry={addEntry}/>
       <Entries onDelete={deleteEntry} entries={entries}/>
     </div>

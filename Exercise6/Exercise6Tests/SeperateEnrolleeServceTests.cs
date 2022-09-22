@@ -6,6 +6,97 @@ namespace Exercise6Tests
     public class SeperateEnrolleeServceTests
     {
         [Test]
+        public void Text_Constructor_Test()
+        {
+            //Arrange
+            List<EnrolleeModel> list = new List<EnrolleeModel>();
+            list.Add(new EnrolleeModel("abc123,Mike Jones,2,AllState"));
+            list.Add(new EnrolleeModel("jedi433,Obi-Wan Kenobi,8,The Force"));
+            //Act
+            var svc = new SeperateEnrolleeService();
+            var results = svc.SeperateEnrollee(list);
+            //Assert
+            Assert.That(results.ContainsKey("AllState"), Is.EqualTo(true));
+            Assert.That(results.ContainsKey("The Force"), Is.EqualTo(true));
+        }
+
+       [Test]
+        public void Text_Constructor_Missing_UserId_Test()
+        {
+            //Arrange
+            List<EnrolleeModel> list = new List<EnrolleeModel>();
+            list.Add(new EnrolleeModel(",Mike Jones,2,AllState"));
+            var expected1 = new EnrolleeModel("", "Mike", "Jones", 2, "AllState");
+            //Act
+            var svc = new SeperateEnrolleeService();
+            var results = svc.SeperateEnrollee(list);
+            //Assert
+            Assert.That(results["AllState"].Count(), Is.EqualTo(1));
+            CompareEnrolleeAssert(results["AllState"].First(), expected1);
+        }
+
+        [Test]
+        public void Text_Constructor_Test_Missing_Part_Of_Name_Test()
+        {
+            //Arrange
+            List<EnrolleeModel> list = new List<EnrolleeModel>();
+            list.Add(new EnrolleeModel("abc123,Jones,2,AllState"));
+            var expected1 = new EnrolleeModel("abc123", "Jones", "Jones", 2, "AllState");
+            //Act
+            var svc = new SeperateEnrolleeService();
+            var results = svc.SeperateEnrollee(list);
+            //Assert
+            Assert.That(results["AllState"].Count(), Is.EqualTo(1));
+            CompareEnrolleeAssert(results["AllState"].First(), expected1);
+        }
+
+        [Test]
+        public void Text_Constructor_Test_Missing_Whole_Name_Test()
+        {
+            //Arrange
+            List<EnrolleeModel> list = new List<EnrolleeModel>();
+            list.Add(new EnrolleeModel("abc123,,2,AllState"));
+            var expected1 = new EnrolleeModel("abc123", "", "", 2, "AllState");
+            //Act
+            var svc = new SeperateEnrolleeService();
+            var results = svc.SeperateEnrollee(list);
+            //Assert
+            Assert.That(results["AllState"].Count(), Is.EqualTo(1));
+            CompareEnrolleeAssert(results["AllState"].First(), expected1);
+        }
+
+        [Test]
+        public void Text_Constructor_Test_Missing_Version_Test()
+        {
+            //Arrange
+            List<EnrolleeModel> list = new List<EnrolleeModel>();
+            list.Add(new EnrolleeModel("abc123,Mike Jones,,AllState"));
+            var expected1 = new EnrolleeModel("abc123", "Mike", "Jones", 0, "AllState");
+            //Act
+            var svc = new SeperateEnrolleeService();
+            var results = svc.SeperateEnrollee(list);
+            //Assert
+            Assert.That(results["AllState"].Count(), Is.EqualTo(1));
+            CompareEnrolleeAssert(results["AllState"].First(), expected1);
+        }
+
+        [Test]
+        public void Text_Constructor_Test_Missing_Insurance_Test()
+        {
+            //Arrange
+            List<EnrolleeModel> list = new List<EnrolleeModel>();
+            list.Add(new EnrolleeModel("abc123,Mike Jones,2,"));
+            var expected1 = new EnrolleeModel("abc123", "Mike", "Jones", 2, "");
+            //Act
+            var svc = new SeperateEnrolleeService();
+            var results = svc.SeperateEnrollee(list);
+            //Assert
+            Assert.That(results[""].Count(), Is.EqualTo(1));
+            CompareEnrolleeAssert(results[""].First(), expected1);
+        }
+
+
+        [Test]
         public void Grouping_By_Insurance_Companies_Test()
         {
             //Arrange
@@ -55,6 +146,76 @@ namespace Exercise6Tests
             Assert.That(results["The Force"].Count(), Is.EqualTo(2));
             CompareEnrolleeAssert(results["The Force"][0], expected1);
             CompareEnrolleeAssert(results["The Force"][1], expected2);
+        }
+
+        [Test]
+        public void Multiple_Clients_In_Same_Insurance_Companies_Missing_userId_Test()
+        {
+            //Arrange
+            List<EnrolleeModel> list = new List<EnrolleeModel>();
+            list.Add(new EnrolleeModel("", "Mike", "Jones", 2, "The Force"));
+            list.Add(new EnrolleeModel(null, "Obi-Wan", "Kenobi", 8, "The Force"));
+            var expected1 = new EnrolleeModel("", "Obi-Wan", "Kenobi", 8, "The Force");
+            //Act
+            var svc = new SeperateEnrolleeService();
+            var results = svc.SeperateEnrollee(list);
+            //Assert
+            Assert.That(results["The Force"].Count(), Is.EqualTo(1));
+            CompareEnrolleeAssert(results["The Force"][0], expected1);
+        }
+
+        [Test]
+        public void Multiple_Clients_In_Same_Insurance_Companies_Missing_LastName_Test()
+        {
+            //Arrange
+            List<EnrolleeModel> list = new List<EnrolleeModel>();
+            list.Add(new EnrolleeModel("", "Mike", null, 2, "The Force"));
+            list.Add(new EnrolleeModel("jedi433", "Obi-Wan", "", 8, "The Force"));
+            var expected1 = new EnrolleeModel("", "Mike", "", 2, "The Force");
+            var expected2 = new EnrolleeModel("jedi433", "Obi-Wan", "", 8, "The Force");
+            //Act
+            var svc = new SeperateEnrolleeService();
+            var results = svc.SeperateEnrollee(list);
+            //Assert
+            Assert.That(results["The Force"].Count(), Is.EqualTo(2));
+            CompareEnrolleeAssert(results["The Force"][0], expected1);
+            CompareEnrolleeAssert(results["The Force"][1], expected2);
+        }
+
+        [Test]
+        public void Multiple_Clients_In_Same_Insurance_Companies_Missing_FirstName_Test()
+        {
+            //Arrange
+            List<EnrolleeModel> list = new List<EnrolleeModel>();
+            list.Add(new EnrolleeModel("abc123", "", "Jones", 2, "The Force"));
+            list.Add(new EnrolleeModel("jedi433", null, "Kenobi", 8, "The Force"));
+            var expected1 = new EnrolleeModel("abc123", "", "Jones", 2, "The Force");
+            var expected2 = new EnrolleeModel("jedi433", "", "Kenobi", 8, "The Force");
+            //Act
+            var svc = new SeperateEnrolleeService();
+            var results = svc.SeperateEnrollee(list);
+            //Assert
+            Assert.That(results["The Force"].Count(), Is.EqualTo(2));
+            CompareEnrolleeAssert(results["The Force"][0], expected1);
+            CompareEnrolleeAssert(results["The Force"][1], expected2);
+        }
+
+        [Test]
+        public void Multiple_Clients_In_Same_Insurance_Companies_Missing_InsuranceCompany_Test()
+        {
+            //Arrange
+            List<EnrolleeModel> list = new List<EnrolleeModel>();
+            list.Add(new EnrolleeModel("abc123", "Mike", "Jones", 2, ""));
+            list.Add(new EnrolleeModel("jedi433", "Obi-Wan", "Kenobi", 8, null));
+            var expected1 = new EnrolleeModel("abc123", "Mike", "Jones", 2, "");
+            var expected2 = new EnrolleeModel("jedi433", "Obi-Wan", "Kenobi", 8, "");
+            //Act
+            var svc = new SeperateEnrolleeService();
+            var results = svc.SeperateEnrollee(list);
+            //Assert
+            Assert.That(results[""].Count(), Is.EqualTo(2));
+            CompareEnrolleeAssert(results[""][0], expected1);
+            CompareEnrolleeAssert(results[""][1], expected2);
         }
 
         [Test]

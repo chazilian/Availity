@@ -12,22 +12,25 @@ namespace Exercise6.Models
         {
             string[] arr = input.Split(",");
 
-            UserId = arr[0].Trim();
+            UserId = arr[0]?.Trim() ?? "";
 
-            string[] nameArr = arr[1].Split(" ");
-            FirstName = nameArr[0].Trim();
-            LastName = nameArr[1].Trim();
+            string[] nameArr = arr[1]?.Split(" ") ?? new string[2];
+            //If only one name is passed then it will be used as first and last name
 
-            Version = int.Parse(arr[2].Trim());
-            InsuranceCompany = arr[3].Trim();
+            FirstName = nameArr.First().Trim() ?? "";
+            LastName = nameArr.Last().Trim() ?? "";
+            //will default version to 0 if none is passed
+            string v = String.IsNullOrEmpty(arr[2]) ? "0" : arr[2];
+            Version = int.Parse(v);
+            InsuranceCompany = arr[3]?.Trim() ?? "";
         }
         public EnrolleeModel(string userId, string firstName, string lastName, int version, string insuranceCompany)
         {
-            UserId = userId;
-            FirstName = firstName;
-            LastName = lastName;
+            UserId = userId ?? "";
+            FirstName = firstName ?? "";
+            LastName = lastName ?? "";
             Version = version;
-            InsuranceCompany = insuranceCompany;
+            InsuranceCompany = insuranceCompany ?? "";
         }
 
         public string UserId { get; private set; }
